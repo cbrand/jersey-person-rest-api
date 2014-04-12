@@ -5,6 +5,7 @@ import java.security.KeyException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -47,6 +48,26 @@ public class PersonService {
 		return Response.created(
 			this.uriInfo.getAbsolutePathBuilder().path(
 				new Long(person.getId()).toString()
+			).build()
+		).build();
+	}
+	
+	@PUT
+	@Path("/{personId: \\d+}")
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response put(@PathParam("personId") long id, Person person) {
+		PersonBackend person_backend = new PersonBackend();
+		Person updated_person;
+		try {
+			updated_person = person_backend.updatePerson(id, person);
+		} catch(KeyException e) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		} catch(IllegalArgumentException e) {
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
+		}
+		return Response.noContent().location(
+			this.uriInfo.getAbsolutePathBuilder().path(
+				new Long(updated_person.getId()).toString()
 			).build()
 		).build();
 	}

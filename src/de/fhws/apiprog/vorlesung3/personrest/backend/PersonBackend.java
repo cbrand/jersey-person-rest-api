@@ -34,19 +34,31 @@ public class PersonBackend {
 		return PersonBackend.getStore().values();
 	}
 	
+	public synchronized Person addPerson(Person person)
+	{
+		person.setId(PersonBackend.getNextKey());
+		PersonBackend.getStore().put(person.getId(), person);
+		return person;
+	}
+	
+	/**
+	 * Aktuallisiert die Person mit der übergebenen ID
+	 * mit den Daten aus der übergebenen Person.
+	 * @throws KeyException Wenn keine Person unter der ID gefunden werden konnte.
+	 */
+	public Person updatePerson(long person_id, Person other_person) throws KeyException
+	{
+		Person person = this.getPerson(person_id);
+				
+		return person;
+	}
+	
 	protected static Long getNextKey() {
 		long key = 0;
 		if(PersonBackend.getStore().size() > 0) {
 			key = Collections.max(PersonBackend.getStore().keySet()) + 1;
 		}
 		return new Long(key);
-	}
-	
-	public synchronized Person addPerson(Person person)
-	{
-		person.setId(PersonBackend.getNextKey());
-		PersonBackend.getStore().put(person.getId(), person);
-		return person;
 	}
 
 	protected static Map<Long, Person> getStore() {
