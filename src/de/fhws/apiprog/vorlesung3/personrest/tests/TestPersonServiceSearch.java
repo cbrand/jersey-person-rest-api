@@ -142,6 +142,40 @@ public class TestPersonServiceSearch extends AbstractPersonServiceTest {
 			assertEquals(persons[0].getFirstName(), "Mario");
 		}
 	
+	@Test
+	/**
+	 * Es sollte einen negativen Offset mit einem
+	 * Fehler quittieren.
+	 */
+	public void testNegativeOffset() throws Exception
+	{
+		Response resp = target("persons")
+				.queryParam("offset", "-1")
+				.request()
+				.get();
+		assertEquals(
+				Response.Status.BAD_REQUEST.getStatusCode(),
+				resp.getStatus()
+				);
+	}
+	
+	@Test
+	/**
+	 * Es sollte einen negativen Limit mit einem
+	 * Fehler quittieren können.
+	 */
+	public void testNegativeLimit() throws Exception
+	{
+		Response resp = target("persons")
+				.queryParam("limit", "-1")
+				.request()
+				.get();
+		assertEquals(
+				Response.Status.BAD_REQUEST.getStatusCode(),
+				resp.getStatus()
+				);
+	}
+	
 	/**
 	 * Gibt die Liste an Personen zurück, die als JSON
 	 * encodiert im übergebenen Response gespeichert

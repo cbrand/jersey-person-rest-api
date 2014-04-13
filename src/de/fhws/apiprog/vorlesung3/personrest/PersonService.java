@@ -35,7 +35,15 @@ public class PersonService {
 		PersonSearcher searcher = person_query.search();
 		PersonSearcherParameterHandler handler = 
 				new PersonSearcherParameterHandler(searcher);
-		handler.apply(uriInfo.getQueryParameters());
+		try {
+			handler.apply(uriInfo.getQueryParameters());
+		}
+		catch(IllegalArgumentException e) {
+			throw new WebApplicationException(
+					e.getMessage(), 
+					Response.Status.BAD_REQUEST
+					);
+		}
 		return Response.ok(handler.getResult()).build();
 	}
 	
