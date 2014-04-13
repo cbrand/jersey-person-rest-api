@@ -1,8 +1,6 @@
 package de.fhws.apiprog.vorlesung3.personrest.objects;
 
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,7 +18,6 @@ public class Person {
 
 	public Person() {
 		super();
-		this.setId(null);
 	}
 
 	public Person(String firstName, String lastName) {
@@ -92,6 +89,20 @@ public class Person {
 	public void setLocation(double latitude, double longitude)
 	{
 		this.setLocation(new Coordinate(latitude, longitude));
+	}
+	
+	/**
+	 * Klont das Personenobjekt und gibt es zurück.
+	 */
+	public Person clone() {
+		Person new_person = new Person();
+		new_person.setId(this.getId());
+		new_person.setFirstName(this.getFirstName());
+		new_person.setLastName(this.getLastName());
+		new_person.setEmailAddress(this.getEmailAddress());
+		new_person.setBirthDate(this.getBirthDate());
+		new_person.setLocation(this.getLocation().clone());
+		return new_person;
 	}
 
 	@Override

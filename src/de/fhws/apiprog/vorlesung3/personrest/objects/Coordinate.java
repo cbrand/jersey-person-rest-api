@@ -34,6 +34,13 @@ public class Coordinate {
 		this.latitude = latitude;
 	}
 	
+	public Coordinate clone() {
+		Coordinate new_coordinate = new Coordinate();
+		new_coordinate.setLatitude(this.getLatitude());
+		new_coordinate.setLongitude(this.getLongitude());
+		return new_coordinate;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

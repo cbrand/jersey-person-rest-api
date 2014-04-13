@@ -39,7 +39,9 @@ public class TestPersonServicePost extends AbstractPersonServiceTest {
 			test_person, MediaType.APPLICATION_XML_TYPE
 		);
 		Response resp = target("persons").request().post(personEntity);
-		assertEquals(resp.getStatus(), 201);
+		assertEquals(resp.getStatus(), 
+				Response.Status.CREATED.getStatusCode()
+				);
 		this.validateCreateLocation(resp);
 	}
 	
@@ -53,7 +55,10 @@ public class TestPersonServicePost extends AbstractPersonServiceTest {
 			test_person, MediaType.APPLICATION_JSON_TYPE
 		);
 		Response resp = target("persons").request().post(personEntity);
-		assertEquals(resp.getStatus(), 201);
+		assertEquals(
+				Response.Status.CREATED.getStatusCode(), 
+				resp.getStatus()
+		);
 		this.validateCreateLocation(resp);
 	}
 	
@@ -78,6 +83,42 @@ public class TestPersonServicePost extends AbstractPersonServiceTest {
 		assertEquals(
 				location.getLongitude(),
 				new Double(200)
+		);
+	}
+	
+	@Test
+	/**
+	 * Es sollte den Code 400 zurück geben, wenn falsche Daten
+	 * übergeben werden.
+	 */
+	public void testErrorInputCreationJson() {
+		String payload = "<?xml version=\"1.0\" encoding=\"utf-8\"?><root></root>";
+		Entity<String> malformedPersonEntity = Entity.entity(
+			payload, MediaType.APPLICATION_JSON_TYPE
+		);
+		
+		Response resp = target("persons").request().post(malformedPersonEntity);
+		assertEquals(
+			resp.getStatus(),
+			Response.Status.BAD_REQUEST.getStatusCode()
+		);
+	}
+	
+	@Test
+	/**
+	 * Es sollte den Code 400 zurück geben, wenn falsche Daten
+	 * über XML weiter gegeben werden.
+	 */
+	public void testErrorInputCreationXml() {
+		String payload = "not valid xml";
+		Entity<String> malformedPersonEntity = Entity.entity(
+			payload, MediaType.APPLICATION_XML_TYPE
+		);
+		
+		Response resp = target("persons").request().post(malformedPersonEntity);
+		assertEquals(
+			resp.getStatus(),
+			Response.Status.BAD_REQUEST.getStatusCode()
 		);
 	}
 

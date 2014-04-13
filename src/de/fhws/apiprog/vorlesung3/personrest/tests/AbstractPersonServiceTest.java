@@ -14,12 +14,11 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
-import de.fhws.apiprog.vorlesung3.personrest.PersonService;
+import de.fhws.apiprog.vorlesung3.personrest.PersonApplication;
 import de.fhws.apiprog.vorlesung3.personrest.backend.PersonBackend;
 import de.fhws.apiprog.vorlesung3.personrest.objects.Person;
 
@@ -27,7 +26,7 @@ public abstract class AbstractPersonServiceTest extends JerseyTest {
 
 	@Override
     protected Application configure() {
-        ResourceConfig config = new ResourceConfig(PersonService.class);
+        Application config = new PersonApplication();
         return config;
     }
 	
