@@ -1,4 +1,4 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 
 import static org.junit.Assert.assertEquals;
@@ -24,9 +24,9 @@ public class TestPersonServiceSearch extends AbstractPersonServiceTest {
 	{
 		super.setUp();
 		PersonBackend backend = new PersonBackend();
-		backend.addPerson(new Person("Christoph", "Brand"));
-		backend.addPerson(new Person("Mario", "Man"));
-		backend.addPerson(new Person("Max", "Mustermann"));
+		backend.add(new Person("Christoph", "Brand"));
+		backend.add(new Person("Mario", "Man"));
+		backend.add(new Person("Max", "Mustermann"));
 	}
 	
 	@Test

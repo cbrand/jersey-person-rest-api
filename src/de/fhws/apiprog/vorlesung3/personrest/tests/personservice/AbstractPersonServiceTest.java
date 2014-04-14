@@ -1,4 +1,4 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -37,7 +37,7 @@ public abstract class AbstractPersonServiceTest extends JerseyTest {
 	
 	public void tearDown()
 	{
-		PersonBackend.reset();
+		new PersonBackend().reset();
 	}
 	
 	protected Person getTestPerson() 
@@ -56,7 +56,8 @@ public abstract class AbstractPersonServiceTest extends JerseyTest {
 		return person;
 	}
 	
-	protected Matcher pathMatcher(Response response) {
+	protected String extractLocationHeaderString(Response response)
+	{
 		List<Object> location_headers = response.getHeaders().get("Location");
 		assertTrue(location_headers.size() > 0);
 		
@@ -68,8 +69,13 @@ public abstract class AbstractPersonServiceTest extends JerseyTest {
 			fail("Non valid URL returned.");
 			return null;
 		}
+		return path_piece;
+	}
+	
+	protected Matcher pathMatcher(Response response) {
+		
 		Pattern p = Pattern.compile("/persons/([0-9]+)$");
-		Matcher m = p.matcher(path_piece);
+		Matcher m = p.matcher(extractLocationHeaderString(response));
 		return m;
 	}
 	
@@ -84,6 +90,11 @@ public abstract class AbstractPersonServiceTest extends JerseyTest {
 		return Long.parseLong(
 				group
 			);
+	}
+	
+	protected PersonBackend getPersonBackend()
+	{
+		return new PersonBackend();
 	}
 	
 }

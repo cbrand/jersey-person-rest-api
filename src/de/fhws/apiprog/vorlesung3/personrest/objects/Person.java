@@ -1,41 +1,39 @@
 package de.fhws.apiprog.vorlesung3.personrest.objects;
 
+import java.security.KeyException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.owlike.genson.annotation.JsonIgnore;
 
 import de.fhws.apiprog.vorlesung3.personrest.helpers.MailAddressValidator;
 
 
 @XmlRootElement
-public class Person {
+public class Person extends AbstractBean {
 	private Long id;
 	private String firstName;
 	private String lastName;
 	private String emailAddress;
 	private Date birthDate;
 	private Coordinate location;
+	@XmlTransient
+	@JsonIgnore
+	private Map<Long, Order> orders;
 
 	public Person() {
 		super();
+		this.orders = new HashMap<Long, Order>();
 	}
 
 	public Person(String firstName, String lastName) {
 		this();
 		this.firstName = firstName;
 		this.lastName = lastName;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.setId(new Long(id));
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -102,7 +100,42 @@ public class Person {
 		new_person.setEmailAddress(this.getEmailAddress());
 		new_person.setBirthDate(this.getBirthDate());
 		new_person.setLocation(this.getLocation().clone());
+		for(Order order: getOrders()) {
+			new_person.addOrder(order.copy());
+		}
 		return new_person;
+	}
+	
+	public Iterable<Order> getOrders() {
+		return orders.values();
+	}
+	
+	public Order getOrder(Long order_id) throws KeyException {
+		if(orders.containsKey(order_id)) {
+			return orders.get(order_id);
+		}
+		else {
+			throw new KeyException(
+					String.format("Order id %s not found", order_id)
+					);
+		}
+	}
+	
+	public void addOrder(Order order) {
+		orders.put(order.getId(), order);
+	}
+	
+	public void clearOrders() {
+		orders.clear();
+	}
+	
+	public void removeOrder(Long order_id) throws KeyException {
+		if(orders.remove(order_id) == null)
+		{
+			throw new KeyException(
+					String.format("Order with id %s not found.", order_id)
+					);
+		}
 	}
 
 	@Override

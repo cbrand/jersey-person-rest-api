@@ -1,4 +1,4 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -85,7 +85,7 @@ public class TestPersonServicePut extends AbstractPersonExistingServiceTest {
 				this.getPath(test_person)
 				).request().put(personEntity);
 		PersonBackend backend = new PersonBackend();
-		Person p = backend.getPerson(test_person.getId());
+		Person p = backend.get(test_person.getId());
 		assertEquals("M", p.getFirstName());
 	}
 	
@@ -103,7 +103,7 @@ public class TestPersonServicePut extends AbstractPersonExistingServiceTest {
 				this.getPath(test_person)
 				).request().put(personEntity);
 		PersonBackend person_backend = new PersonBackend();
-		Coordinate location = person_backend.getPerson(
+		Coordinate location = person_backend.get(
 				this.getIdFromLocation(resp)
 			).getLocation();
 		assertEquals(
@@ -180,7 +180,7 @@ public class TestPersonServicePut extends AbstractPersonExistingServiceTest {
 	{
 		Person person = super.getTestPerson();
 		PersonBackend backend = new PersonBackend();
-		backend.addPerson(person);
+		backend.add(person);
 		Person return_person = person.clone();
 		return return_person;
 	}

@@ -1,4 +1,4 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 import java.security.KeyException;
 
@@ -38,7 +38,7 @@ public class TestPersonServiceDelete extends AbstractPersonExistingServiceTest {
 		
 		target(this.getPath(test_person)).request().delete();
 		PersonBackend backend = new PersonBackend();
-		backend.getPerson(test_person.getId());
+		backend.get(test_person.getId());
 	}
 	
 	@Test

@@ -1,4 +1,4 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +25,7 @@ public class TestPersonServiceGet extends AbstractPersonServiceTest {
 	@Test
 	public void testGetJson() {
 		PersonBackend backend = new PersonBackend();
-		Person person = backend.addPerson(new Person("James", "Bond"));
+		Person person = backend.add(new Person("James", "Bond"));
 		
 		String path = String.format("persons/%s",  person.getId());
 		Response resp = target(path).request().get();
@@ -55,7 +55,7 @@ public class TestPersonServiceGet extends AbstractPersonServiceTest {
 	@Test
 	public void testGetXml() {
 		PersonBackend backend = new PersonBackend();
-		Person person = backend.addPerson(new Person("James", "Bond"));
+		Person person = backend.add(new Person("James", "Bond"));
 		
 		String path = String.format("persons/%s",  person.getId());
 		Response resp = target(path).request().accept("application/xml").get();

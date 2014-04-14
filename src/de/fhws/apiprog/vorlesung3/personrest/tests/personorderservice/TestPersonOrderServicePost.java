@@ -1,9 +1,13 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personorderservice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.security.KeyException;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -13,10 +17,12 @@ import org.junit.Test;
 
 import de.fhws.apiprog.vorlesung3.personrest.backend.PersonBackend;
 import de.fhws.apiprog.vorlesung3.personrest.objects.Coordinate;
+import de.fhws.apiprog.vorlesung3.personrest.objects.Order;
 import de.fhws.apiprog.vorlesung3.personrest.objects.Person;
 
 
-public class TestPersonServicePost extends AbstractPersonServiceTest {
+public class TestPersonOrderServicePost extends AbstractPersonOrderServiceTest {
+	
 	
 	/**
 	 * Validiert die Location die beim erstellen einer Klasse
@@ -25,65 +31,25 @@ public class TestPersonServicePost extends AbstractPersonServiceTest {
 	 */
 	public void validateCreateLocation(Response response) {
 		assertTrue(
-			this.pathMatcher(response).matches()
+			pathMatcher(response).matches()
 		);
-	}
-	
-	@Test
-	/**
-	 * Es sollte die Person erstellen über XML.
-	 */
-	public void testCreationXml() {
-		Person test_person = this.getTestPerson();
-		Entity<Person> personEntity = Entity.entity(
-			test_person, MediaType.APPLICATION_XML_TYPE
-		);
-		Response resp = target("persons").request().post(personEntity);
-		assertEquals(resp.getStatus(), 
-				Response.Status.CREATED.getStatusCode()
-				);
-		this.validateCreateLocation(resp);
 	}
 	
 	@Test
 	/**
 	 * Es sollte die Person erstellen über JSON.
 	 */
-	public void testCreationJson() {
-		Person test_person = this.getTestPerson();
-		Entity<Person> personEntity = Entity.entity(
-			test_person, MediaType.APPLICATION_JSON_TYPE
+	public void testCreation() throws Exception {
+		Order test_order = this.getTestOrder();
+		Entity<Order> orderEntity = Entity.entity(
+			test_order, MediaType.APPLICATION_JSON_TYPE
 		);
-		Response resp = target("persons").request().post(personEntity);
+		Response resp = target(getPath()).request().post(orderEntity);
 		assertEquals(
 				Response.Status.CREATED.getStatusCode(), 
 				resp.getStatus()
 		);
 		this.validateCreateLocation(resp);
-	}
-	
-	@Test
-	/**
-	 * Es sollte die Koordinate über JSON gesetzt werden.
-	 */
-	public void testCreationOfCoordinate() throws KeyException {
-		Person test_person = this.getTestPerson();
-		Entity<Person> personEntity = Entity.entity(
-			test_person, MediaType.APPLICATION_JSON_TYPE
-		);
-		Response resp = target("persons").request().post(personEntity);
-		PersonBackend person_backend = new PersonBackend();
-		Coordinate location = person_backend.getPerson(
-				this.getIdFromLocation(resp)
-			).getLocation();
-		assertEquals(
-				location.getLatitude(),
-				new Double(200)
-				);
-		assertEquals(
-				location.getLongitude(),
-				new Double(200)
-		);
 	}
 	
 	@Test
@@ -97,7 +63,7 @@ public class TestPersonServicePost extends AbstractPersonServiceTest {
 			payload, MediaType.APPLICATION_JSON_TYPE
 		);
 		
-		Response resp = target("persons").request().post(malformedPersonEntity);
+		Response resp = target(getPath()).request().post(malformedPersonEntity);
 		assertEquals(
 			resp.getStatus(),
 			Response.Status.BAD_REQUEST.getStatusCode()
@@ -115,7 +81,7 @@ public class TestPersonServicePost extends AbstractPersonServiceTest {
 			payload, MediaType.APPLICATION_XML_TYPE
 		);
 		
-		Response resp = target("persons").request().post(malformedPersonEntity);
+		Response resp = target(getPath()).request().post(malformedPersonEntity);
 		assertEquals(
 			resp.getStatus(),
 			Response.Status.BAD_REQUEST.getStatusCode()

@@ -1,4 +1,4 @@
-package de.fhws.apiprog.vorlesung3.personrest.tests;
+package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 import de.fhws.apiprog.vorlesung3.personrest.backend.PersonBackend;
 import de.fhws.apiprog.vorlesung3.personrest.objects.Person;
@@ -33,9 +33,17 @@ public abstract class AbstractPersonExistingServiceTest extends
 	{
 		Person person = super.getTestPerson();
 		PersonBackend backend = new PersonBackend();
-		backend.addPerson(person);
+		backend.add(person);
 		Person return_person = person.clone();
 		return return_person;
+	}
+	
+	protected Person getUnclonedTestPerson()
+	{
+		Person person = super.getTestPerson();
+		PersonBackend backend = new PersonBackend();
+		backend.add(person);
+		return person;
 	}
 	
 }
