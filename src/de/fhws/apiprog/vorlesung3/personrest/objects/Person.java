@@ -101,7 +101,7 @@ public class Person extends AbstractBean {
 		new_person.setBirthDate(this.getBirthDate());
 		new_person.setLocation(this.getLocation().clone());
 		for(Order order: getOrders()) {
-			new_person.addOrder(order.copy());
+			new_person.addOrder(order.clone());
 		}
 		return new_person;
 	}

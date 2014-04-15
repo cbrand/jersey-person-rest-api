@@ -56,7 +56,7 @@ public class PersonOrderService {
 						(OrderSearcher)getBackend().search()
 						);
 		try {
-			handler.apply(uriInfo.getQueryParameters());
+			handler.apply(uriInfo.getQueryParameters(true));
 		}
 		catch(IllegalArgumentException e) {
 			throw new WebApplicationException(

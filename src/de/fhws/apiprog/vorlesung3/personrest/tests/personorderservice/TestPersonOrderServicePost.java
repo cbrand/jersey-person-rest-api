@@ -3,22 +3,13 @@ package de.fhws.apiprog.vorlesung3.personrest.tests.personorderservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.security.KeyException;
-import java.util.regex.Pattern;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
-import de.fhws.apiprog.vorlesung3.personrest.backend.PersonBackend;
-import de.fhws.apiprog.vorlesung3.personrest.objects.Coordinate;
 import de.fhws.apiprog.vorlesung3.personrest.objects.Order;
-import de.fhws.apiprog.vorlesung3.personrest.objects.Person;
 
 
 public class TestPersonOrderServicePost extends AbstractPersonOrderServiceTest {

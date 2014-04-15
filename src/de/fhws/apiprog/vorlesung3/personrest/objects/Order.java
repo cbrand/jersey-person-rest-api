@@ -86,9 +86,10 @@ public class Order extends AbstractBean {
 		this.state = state;
 	}
 	
-	public Order copy()
+	public Order clone()
 	{
 		Order clone = new Order();
+		clone.setId(getId());
 		clone.setAmmount(getAmmount());
 		clone.setPrice(getPrice());
 		clone.setProductName(getProductName());
