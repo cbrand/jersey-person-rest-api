@@ -15,9 +15,11 @@ public class Searcher<T> {
 	protected boolean use_limit;
 	protected int offset;
 	protected boolean use_offset;
+	protected int total_size;
 	
 	public Searcher(Collection<T> baseSet) {
 		super();
+		
 		searchResults = new ArrayList<T>();
 		searchResults.addAll(baseSet);
 	}
@@ -26,6 +28,7 @@ public class Searcher<T> {
 		List<T> return_list = new ArrayList<T>();
 		int to_use_offset = 0;
 		int to_use_limit = searchResults.size();
+		setTotalSize(to_use_limit);
 		
 		if(use_offset)
 		{
@@ -66,6 +69,14 @@ public class Searcher<T> {
 	{
 		this.offset = offset;
 		use_offset = true;
+	}
+
+	public int getTotalSize() {
+		return total_size;
+	}
+
+	protected void setTotalSize(int total_size) {
+		this.total_size = total_size;
 	}
 	
 }
