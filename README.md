@@ -2,7 +2,7 @@
 
 Java implementation of a person REST API.
 
-This is a toy programm demonstrating some functionalities of jersey for a computer science "api programming" class. 
+This is a toy program demonstrating some functionalities of jersey for a computer science "api programming" class. 
 
 It is my first try to build something in jersey so it is for sure not best practice and has none authentication or authorization layers implemented into it.
 
