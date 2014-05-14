@@ -1,11 +1,15 @@
 package de.fhws.apiprog.vorlesung3.personrest.tests.personservice;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
@@ -144,6 +148,135 @@ public class TestPersonServiceSearch extends AbstractPersonServiceTest {
 	
 	@Test
 	/**
+	 * Es sollte die next page in einem Link Header angeben,
+	 * wenn eine weitere Seite existiert.
+	 */
+	public void testNextPageWithOffsetAndLimit()
+	{
+		Response resp = target("persons")
+				.queryParam("offset", "0")
+				.queryParam("limit", "1")
+				.request()
+				.get();
+		List<String> links = getLinkHeaders(resp);
+		if(links.size() <= 0) {
+			fail("There should be at least one link header.");
+		}
+		boolean check = false;
+		for(String link: links) {
+			if(link.contains("rel=\"after\"")) {
+				assertThat(link, containsString("rel=\"after\""));
+				assertThat(link, containsString("limit=1"));
+				assertThat(link, containsString("offset=1"));
+				check = true;
+			}
+		}
+		if(!check) {
+			fail("No link header to the before entry set.");
+		}
+	}
+	
+	@Test
+	/**
+	 * Falls keine vorherige Seite mehr existiert sollte kein before Link in die
+	 * Headers gesetzt werden.
+	 */
+	public void testPrevPageWithOffsetZero()
+	{
+		Response resp = target("persons")
+				.queryParam("offset", "0")
+				.queryParam("limit", "1")
+				.request()
+				.get();
+		List<String> links = getLinkHeaders(resp);
+		boolean check = false;
+		for(String link: links) {
+			if(link.contains("rel=\"before\"")) {
+				check = true;
+			}
+		}
+		assertFalse(
+				"A before link has been set even though there is no before page.", 
+				check
+			);
+	}
+	
+	@Test
+	/**
+	 * Es sollte die vorherige Seite als Link angegeben werden, wenn eine
+	 * vorherige Seite zur Verfügung steht.
+	 */
+	public void testPrevPageWithOffsetAndLimit()
+	{
+		Response resp = target("persons")
+				.queryParam("offset", "1")
+				.queryParam("limit", "1")
+				.request()
+				.get();
+		List<String> links = getLinkHeaders(resp);
+		if(links.size() <= 0) {
+			fail("There should be at least one link header.");
+		}
+		boolean check = false;
+		for(String link: links) {
+			if(link.contains("rel=\"before\"")) {
+				assertThat(link, containsString("rel=\"before\""));
+				assertThat(link, containsString("limit=1"));
+				assertThat(link, containsString("offset=0"));
+				check = true;
+			}
+		}
+		if(!check) {
+			fail("No link header to the before entry set.");
+		}
+	}
+	
+	@Test
+	/**
+	 * Es sollte, wenn die nächste Seite nicht existiert keine
+	 * nachträgliche Seite hinzufügen.
+	 */
+	public void testNextPageWithMaxOffset() {
+		Response resp = target("persons")
+				.queryParam("offset", "2")
+				.queryParam("limit", "1")
+				.request()
+				.get();
+		List<String> links = getLinkHeaders(resp);
+		if(links.size() <= 0) {
+			fail("There should be at least one link header.");
+		}
+		boolean check = false;
+		for(String link: links) {
+			if(link.contains("rel=\"after\"")) {
+				check = true;
+			}
+		}
+		assertFalse("There should not be a after link if the next page is not existing", check);
+	}
+	
+	@Test
+	/**
+	 * Es sollte keine After Page anzeigen, wenn kein offset angegeben wurde, das Limit
+	 * jedoch alle Daten abfragt.
+	 */
+	public void testNextPageWithOnlyLimit() {
+		Response resp = target("persons")
+				.queryParam("limit", "3")
+				.request()
+				.get();
+		List<String> links = getLinkHeaders(resp);
+		boolean check = false;
+		for(String link: links) {
+			if(link.contains("rel=\"after\"")) {
+				check = true;
+			}
+		}
+		assertFalse("There should not be a after link if the next page is not existing", check);
+	}
+	
+	@Test
+	/**
 	 * Es sollte einen negativen Offset mit einem
 	 * Fehler quittieren.
 	 */
@@ -193,6 +326,20 @@ public class TestPersonServiceSearch extends AbstractPersonServiceTest {
 		return (Person[]) g.deserialize(
 				Person[].class, object_reader, null
 				);
+	}
+	
+	protected List<String> getLinkHeaders(Response resp)
+	{
+		MultivaluedMap<String, Object> headers = resp.getHeaders();
+		List<String> link_list = new ArrayList<>();
+		
+		if(headers.containsKey("Link")) {
+			List<Object> links = headers.get("Link");
+			for(Object link: links) {
+				link_list.add((String)link);
+			}
+		}
+		return link_list;
 	}
 	
 }

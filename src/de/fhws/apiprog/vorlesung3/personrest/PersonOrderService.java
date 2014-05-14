@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import de.fhws.apiprog.vorlesung3.personrest.backend.Backend;
 import de.fhws.apiprog.vorlesung3.personrest.backend.PersonOrderBackend;
@@ -23,7 +24,7 @@ import de.fhws.apiprog.vorlesung3.personrest.backend.seacher.parameter.OrderSear
 import de.fhws.apiprog.vorlesung3.personrest.objects.Order;
 import de.fhws.apiprog.vorlesung3.personrest.objects.Person;
 
-public class PersonOrderService {
+public class PersonOrderService extends AbstractService {
 
 	@Context
 	UriInfo uriInfo;
@@ -64,7 +65,11 @@ public class PersonOrderService {
 					Response.Status.BAD_REQUEST
 					);
 		}
-		return Response.ok(handler.getResult()).build();
+		ResponseBuilder response_builder = Response.ok(handler.getResult());
+		return applyPagination(
+			response_builder,
+			handler
+		).build();
 	}
 	
 	@GET

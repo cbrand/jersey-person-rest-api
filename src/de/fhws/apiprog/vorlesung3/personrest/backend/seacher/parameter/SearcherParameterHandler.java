@@ -121,11 +121,31 @@ public abstract class SearcherParameterHandler<Bean, S extends Searcher<Bean>> {
 	}
 
 	public PageInformation getPreviousPage() {
-		return new PreviousPageInformation(appliedOffset, appliedLimit,
+		if(appliedOffset == null) {
+			return null;
+		}
+		if(appliedLimit == null) {
+			appliedLimit = getTotalSize() - appliedOffset;
+		}
+		PageInformation page_information = new PreviousPageInformation(appliedOffset, appliedLimit,
 				getTotalSize());
+		if(page_information.getOffset() < 0) {
+			return null;
+		}
+		return page_information;
 	}
 
 	public PageInformation getNextPage() {
+		if(appliedLimit == null) {
+			return null;
+		}
+		if(appliedOffset == null) {
+			appliedOffset = 0;
+		}
+		if(appliedOffset + appliedLimit >= getTotalSize())
+		{
+			return null;
+		}
 		return new NextPageInformation(appliedOffset, appliedLimit,
 				getTotalSize());
 	}

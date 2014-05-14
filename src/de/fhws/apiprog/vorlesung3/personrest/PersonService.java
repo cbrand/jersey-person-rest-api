@@ -15,6 +15,7 @@ import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import de.fhws.apiprog.vorlesung3.personrest.backend.PersonBackend;
@@ -22,7 +23,7 @@ import de.fhws.apiprog.vorlesung3.personrest.backend.seacher.parameter.PersonSea
 import de.fhws.apiprog.vorlesung3.personrest.objects.Person;
 
 @Path("/persons")
-public class PersonService {
+public class PersonService extends AbstractService {
 	
 	@Context
 	UriInfo uriInfo;
@@ -44,7 +45,11 @@ public class PersonService {
 					Response.Status.BAD_REQUEST
 					);
 		}
-		return Response.ok(handler.getResult()).build();
+		ResponseBuilder response_builder = Response.ok(handler.getResult());
+		return applyPagination(
+			response_builder,
+			handler
+		).build();
 	}
 	
 	@GET

@@ -17,6 +17,9 @@ public abstract class PageInformation {
 	}
 	
 	protected void setOffset(Integer offset) {
+		if(offset == null) {
+			offset = 0;
+		}
 		this.offset = offset;
 	}
 	
