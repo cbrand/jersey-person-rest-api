@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.KeyException;
 
 import javax.ws.rs.core.Response;
@@ -30,7 +32,7 @@ public class TestPersonOrderServiceGet extends AbstractPersonOrderServiceTest {
 		Order test_order = addTestOrderAndReturn();
 		
 		String path = getPath(test_order);
-		Response resp = target(path).request().get();
+		Response resp = target(path).request().accept("application/json").get();
 		assertEquals(200, resp.getStatus());
 		Object entity = resp.getEntity();
 		
