@@ -40,10 +40,6 @@ public abstract class ParameterLinkHeaderService extends LinkHeaderService {
 		return uri_builder.build();
 	}
 	
-	public String getURIString() {
-		return getUri().toString();
-	}
-	
 	protected MultivaluedMap<String, String> getClonedParameters() {
 		UriInfo uri_info = getCurrentUriInfo();
 		MultivaluedMap<String, String> values = new MultivaluedHashMap<>();

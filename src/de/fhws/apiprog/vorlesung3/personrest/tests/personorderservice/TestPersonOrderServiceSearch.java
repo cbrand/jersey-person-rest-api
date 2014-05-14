@@ -71,6 +71,7 @@ public class TestPersonOrderServiceSearch extends
 		Response resp = target(getPath(getSearchPerson()))
 				.queryParam("productName", "Nuclear Device")
 				.request()
+				.accept("application/json")
 				.get();
 		Order[] orders = getOrderJson(resp);
 		assertEquals(1, orders.length);
